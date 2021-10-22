@@ -1,4 +1,4 @@
-*	1920*1080 ±âÁØ
-*	SlideCanvas¾Æ·¡ Content¿¡ ScrollView»ı¼º
-	-> ±âÁ¸ ScrollRect Á¦°Å, ScrollRect_ »ç¿ë
-*	ÀüÃ¼ ¹è°æ Image : Canvas - SlideCanvas - Viewport¿¡¼­ Image º¯°æ
+*	1920*1080 ê¸°ì¤€
+*	SlideCanvasì•„ë˜ Contentì— ScrollViewìƒì„±
+	-> ê¸°ì¡´ ScrollRect ì œê±°, ScrollRect_ ì‚¬ìš©
+*	ì „ì²´ ë°°ê²½ Image : Canvas - SlideCanvas - Viewportì—ì„œ Image ë³€ê²½
