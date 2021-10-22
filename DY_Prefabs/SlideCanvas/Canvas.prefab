@@ -837,17 +837,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelSize: 3
   _setFirstPanel: 2
+  _btnCurrentSize: 360
   _isFixedMenuBtnSize: 0
   _isLerpMenuIconSize: 0
   _isLerpBothOfThem: 0
   _btnIconLerpHeight: 0
   _btnIconLerpScale: 0
-  _panelDis: 0
-  _panelScrollValue: []
-  _panel_Index: 0
-  _TR_Contents: []
-  _btnCurrentSize: 0
-  _btnRestOfSize: 0
   _scrollbarHorizontal: {fileID: 3411506544631126382}
   _tabSlider: {fileID: 4529065505507386953}
   _btnRect:
@@ -858,6 +853,11 @@ MonoBehaviour:
   - {fileID: 1710468895645120926}
   - {fileID: 6477430818581979598}
   - {fileID: 1850673069302412434}
+  _panelDis: 0
+  _panelScrollValue: []
+  _panel_Index: 0
+  _TR_Contents: []
+  _btnRestOfSize: 0
 --- !u!114 &3411506544485219272
 MonoBehaviour:
   m_ObjectHideFlags: 0
