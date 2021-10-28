@@ -23,7 +23,6 @@ public class Time_ : MonoBehaviour
         string minute = string.Empty;
         string second = string.Empty;
 
-
         if (_time >= 3600)
         {
             hour = ((int)_time / 3600).ToString();
