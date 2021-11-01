@@ -33,7 +33,7 @@ public class Initialize : MonoBehaviour
         }
     }
 
-    [CustomEditor(typeof(Level_Lobby))]
+    [CustomEditor(typeof(Initialize))]
     public class customEditor : Editor
     {
         public override void OnInspectorGUI()
