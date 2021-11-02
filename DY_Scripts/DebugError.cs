@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class DebugError
 {
     public static void GetData(string where, string error)
