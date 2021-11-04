@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Time_ : MonoBehaviour
 {
-    // 다음 날 00:00 반환
-    public static DateTime GetTomorrow()
+    // 다음 날 00:00 반환 - Datetime
+    public static DateTime GetTomorrow_Datetime()
     {
         DateTime temp_DT = DateTime.Now.AddDays(1);
         string temp_str = temp_DT.Year.ToString() + "/" + temp_DT.Month.ToString() + "/" + (temp_DT.Day).ToString() + " 00:00:00";
@@ -13,10 +13,25 @@ public class Time_ : MonoBehaviour
         return Convert.ToDateTime(temp_str);
     }
 
-    // string or int 형식의 시간(초)을 string으로 반환
-    public static string TimeToString(object time, bool plusZero = false, bool plusSecond = false)
+    // 다음 날 (00:00)까지 남은 시간 반환 -> double
+    public static double GetTomorrow_TotalSeconds()
     {
-        double _time = int.Parse(time as string);
+        DateTime temp_DT = DateTime.Now.AddDays(1);
+        string temp_str = temp_DT.Year.ToString() + "/" + temp_DT.Month.ToString() + "/" + (temp_DT.Day).ToString() + " 00:00:00";
+        DateTime tmep_DT_tomorrow = Convert.ToDateTime(temp_str);
+
+        TimeSpan span = tmep_DT_tomorrow - DateTime.Now;
+
+        return span.TotalSeconds;
+    }
+
+    // string or int 형식의 시간(초)을 string으로 반환
+    public static string TimeToString(object time, bool plusZero = false, bool plusSecond = false, bool colon = false)
+    {
+        double _time = 0;
+        if (!double.TryParse(time.ToString(), out _time))
+            DebugError.Parse("Time_", time.ToString());
+
         StringBuilder temp = new StringBuilder();
 
         string hour = string.Empty;
@@ -44,13 +59,31 @@ public class Time_ : MonoBehaviour
             if (second.Length == 1) second = "0" + second;
         }
 
-        if (hour.Length != 0) temp.Append(hour + "시간 ");
-        if (minute.Length != 0) temp.Append(minute + "분");
+        if (colon)
+        {
+            if (hour.Length != 0) temp.Append(hour + ":");
+            if (minute.Length != 0) temp.Append(minute + ":");
 
-        if (plusSecond || (hour.Length == 0 && minute.Length == 0))
-            temp.Append(" " + second + "초");
+            if (plusSecond || (hour.Length == 0 && minute.Length == 0))
+                temp.Append(second);
+        }
+        else
+        {
+            if (hour.Length != 0) temp.Append(hour + "시간 ");
+            if (minute.Length != 0) temp.Append(minute + "분");
+
+            if (plusSecond || (hour.Length == 0 && minute.Length == 0))
+                temp.Append(" " + second + "초");
+        }
 
         return temp.ToString();
+    }
+
+    // 일일 출석 보상 갱신 체크 - 원래 가지고 있던 다음날, 현재 날 -> 같으면 날이 바뀐 것
+    public static bool IsDailyRewardUpdate(DateTime nowday, DateTime oldTomorrow)
+    {
+        if (nowday.Day == oldTomorrow.Day) return true;
+        else return false;
     }
 
     // 일일 퀘스트 갱신 체크
@@ -70,14 +103,5 @@ public class Time_ : MonoBehaviour
         temp = TimeToString(span.TotalSeconds, plusZero: true, plusSecond: false);
 
         return temp;
-    }
-
-    // 일일 출석 보상 갱신 체크
-    public static bool IsDailyRewardUpdate(DateTime nowday, DateTime lastday)
-    {
-        int spanDay = nowday.Day - lastday.Day;
-
-        if (spanDay != 0) return true;
-        else return false;
     }
 }
