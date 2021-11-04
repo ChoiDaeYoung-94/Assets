@@ -5,7 +5,7 @@ using UnityEngine;
 public class Time_ : MonoBehaviour
 {
     // 다음 날 00:00 반환
-    protected DateTime GetTomorrow()
+    public static DateTime GetTomorrow()
     {
         DateTime temp_DT = DateTime.Now.AddDays(1);
         string temp_str = temp_DT.Year.ToString() + "/" + temp_DT.Month.ToString() + "/" + (temp_DT.Day).ToString() + " 00:00:00";
@@ -14,7 +14,7 @@ public class Time_ : MonoBehaviour
     }
 
     // string or int 형식의 시간(초)을 string으로 반환
-    protected string TimeToString(object time, bool plusZero = false, bool plusSecond = false)
+    public static string TimeToString(object time, bool plusZero = false, bool plusSecond = false)
     {
         double _time = int.Parse(time as string);
         StringBuilder temp = new StringBuilder();
@@ -54,7 +54,7 @@ public class Time_ : MonoBehaviour
     }
 
     // 일일 퀘스트 갱신 체크
-    protected bool IsDailyQuestUpdate(DateTime tomorrow, DateTime today)
+    public static bool IsDailyQuestUpdate(DateTime tomorrow, DateTime today)
     {
         TimeSpan span = tomorrow - today;
         if (span.TotalSeconds <= 0) return false;
@@ -62,7 +62,7 @@ public class Time_ : MonoBehaviour
     }
 
     // 일일 퀘스트 남은 시간 string 반환
-    protected string update_Time(DateTime tomorrow, DateTime today, bool plusZero = false)
+    public static string update_Time(DateTime tomorrow, DateTime today, bool plusZero = false)
     {
         string temp = string.Empty;
         TimeSpan span = tomorrow - today;
@@ -73,7 +73,7 @@ public class Time_ : MonoBehaviour
     }
 
     // 일일 출석 보상 갱신 체크
-    protected bool IsDailyRewardUpdate(DateTime nowday, DateTime lastday)
+    public static bool IsDailyRewardUpdate(DateTime nowday, DateTime lastday)
     {
         int spanDay = nowday.Day - lastday.Day;
 
