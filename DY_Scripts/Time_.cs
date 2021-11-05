@@ -79,11 +79,11 @@ public class Time_ : MonoBehaviour
         return temp.ToString();
     }
 
-    // 일일 출석 보상 갱신 체크 - 원래 가지고 있던 다음날, 현재 날 -> 같으면 날이 바뀐 것
+    // 일일 출석 보상 로그인 후 갱신 체크 - 마지막 로그인 날 보다 하루가 더 지났을 경우 true
     public static bool IsDailyRewardUpdate(DateTime nowday, DateTime oldDay)
     {
         TimeSpan span = nowday - oldDay;
-        if (span.TotalSeconds >= 0) return true;
+        if (span.TotalDays >= 1) return true;
         else return false;
     }
 
