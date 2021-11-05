@@ -80,18 +80,11 @@ public class Time_ : MonoBehaviour
     }
 
     // 일일 출석 보상 갱신 체크 - 원래 가지고 있던 다음날, 현재 날 -> 같으면 날이 바뀐 것
-    public static bool IsDailyRewardUpdate(DateTime nowday, DateTime oldTomorrow)
+    public static bool IsDailyRewardUpdate(DateTime nowday, DateTime oldDay)
     {
-        if (nowday.Day == oldTomorrow.Day) return true;
+        TimeSpan span = nowday - oldDay;
+        if (span.TotalSeconds >= 0) return true;
         else return false;
-    }
-
-    // 일일 퀘스트 갱신 체크
-    public static bool IsDailyQuestUpdate(DateTime tomorrow, DateTime today)
-    {
-        TimeSpan span = tomorrow - today;
-        if (span.TotalSeconds <= 0) return false;
-        else return true;
     }
 
     // 일일 퀘스트 남은 시간 string 반환

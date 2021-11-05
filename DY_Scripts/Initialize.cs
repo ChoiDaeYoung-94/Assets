@@ -1,4 +1,6 @@
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 using System;
 using UnityEngine;
@@ -11,7 +13,7 @@ public class Initialize : MonoBehaviour
     /// </summary>
     enum Scripts
     {
-        
+
     }
 
     [Tooltip("초기화 해야 할 스크립트를 지닌 게임오브젝트")]
@@ -22,17 +24,18 @@ public class Initialize : MonoBehaviour
         foreach (Scripts script in Enum.GetValues(typeof(Scripts)))
         {
             foreach (GameObject item in _go_initialze)
-            {                
+            {
                 if (item.GetComponent(script.ToString()) != null)
                 {
                     // 실행해야 할 메서드
                     item.GetComponent(script.ToString()).SendMessage("");
                     break;
-                }                
+                }
             }
         }
     }
 
+#if UNITY_EDITOR
     [CustomEditor(typeof(Initialize))]
     public class customEditor : Editor
     {
@@ -43,4 +46,5 @@ public class Initialize : MonoBehaviour
             base.OnInspectorGUI();
         }
     }
+#endif
 }

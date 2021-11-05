@@ -1,4 +1,7 @@
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -34,12 +37,12 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     [Header("아래 부턴 참고용 연동 X-----------------------------------------------------------------------------------------------------------------")]
     [Tooltip("각 패널의 scroll Value상의 거리(패널 간격)")] [SerializeField] float _panelDis = 0;
-    [Tooltip("각 패널의 scroll Value -> Init에서 초기화")] [SerializeField] float[] _panelScrollValue = null;    
+    [Tooltip("각 패널의 scroll Value -> Init에서 초기화")] [SerializeField] float[] _panelScrollValue = null;
 
     [Tooltip("현재 패널의 Index - 1")] [SerializeField] int _panel_Index = 0;
     [Tooltip("존재하는 패널의 transform")] [SerializeField] Transform[] _TR_Contents = null;
     float _panelFirtTouch = 0, _panelNextTarget = 0; // 첫 터치할때의 패널과 endDrag일때의 패널의 scrollvalue
-    
+
     [Tooltip("나머지 패널 버튼의 크기")] [SerializeField] float _btnRestOfSize = 0;
 
     [Tooltip("Drag 여부")] bool _isDrag = false;
@@ -59,11 +62,11 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         Init();
     }
-    
+
     void Init()
     {
         _panelScrollValue = new float[_panelSize];
-        _TR_Contents = new Transform[_panelSize];        
+        _TR_Contents = new Transform[_panelSize];
 
         Transform content = transform.GetChild(0).GetChild(0).transform;
 
@@ -72,14 +75,14 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         {
             _btnCurrentSize = _btnRestOfSize = 1080f / _panelSize;
             _tabSlider.GetComponent<RectTransform>().sizeDelta = new Vector2(_btnCurrentSize * 2f, _tabSlider.GetComponent<RectTransform>().sizeDelta.y);
-        }            
+        }
         else
         {
             _btnRestOfSize = (1080f - _btnCurrentSize) / (_panelSize - 1);
-            _tabSlider.GetComponent<RectTransform>().sizeDelta = 
+            _tabSlider.GetComponent<RectTransform>().sizeDelta =
                 new Vector2(_btnCurrentSize + _btnRestOfSize - (_btnCurrentSize - _btnRestOfSize), _tabSlider.GetComponent<RectTransform>().sizeDelta.y);
         }
-        
+
         // 수평 슬라이드 핸들 사이즈 조절
         RectTransform _tabSliderHandle = _tabSlider.transform.GetChild(0).GetChild(0).GetComponent<RectTransform>();
         _tabSliderHandle.sizeDelta = new Vector2(_btnCurrentSize, _tabSliderHandle.sizeDelta.y);
@@ -90,7 +93,7 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         /// => 각 패널간의 거리는 -1을 해줘야 0.33 나오는 느낌으로
         /// 그 뒤 각 패널의 scroll value를 거리를 곱해서 대입
         /// </summary>
-        _panelDis = 1f / (_panelSize - 1); 
+        _panelDis = 1f / (_panelSize - 1);
         for (int i = -1; ++i < _panelSize;)
         {
             _TR_Contents[i] = content.GetChild(i).transform; // 각 패널 transform 미리 받아둠
@@ -111,13 +114,13 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             {
                 _TextGo[i].SetActive(false);
                 _IconRect[i].anchoredPosition3D = new Vector3(_IconRect[i].anchoredPosition3D.x, _IconRect[i].anchoredPosition3D.y - 20f, _IconRect[i].anchoredPosition3D.z);
-            }                
+            }
         }
-       
+
         _btnIconPos = _IconRect[0].anchoredPosition3D;
 
         // 첫 패널 지정
-        BottomPanelBtnClick(_setFirstPanel - 1);        
+        BottomPanelBtnClick(_setFirstPanel - 1);
     }
 
     private void FixedUpdate()
@@ -208,10 +211,10 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     }
 
     // 하단 메뉴의 각 버튼 사이즈 조절
-    void TabBtnCtl() 
+    void TabBtnCtl()
     {
-        _btnRect[_panel_Index].sizeDelta = new Vector2(_btnCurrentSize, _btnRect[_panel_Index].sizeDelta.y);        
-        _btnIconRect[_panel_Index].sizeDelta = new Vector2(_btnCurrentSize, _btnRect[_panel_Index].sizeDelta.y);        
+        _btnRect[_panel_Index].sizeDelta = new Vector2(_btnCurrentSize, _btnRect[_panel_Index].sizeDelta.y);
+        _btnIconRect[_panel_Index].sizeDelta = new Vector2(_btnCurrentSize, _btnRect[_panel_Index].sizeDelta.y);
 
         for (int i = -1; ++i < _panelSize;)
             if (i != _panel_Index)
@@ -219,7 +222,7 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 _btnRect[i].sizeDelta = new Vector2(_btnRestOfSize, _btnRect[i].sizeDelta.y);
                 _btnIconRect[i].sizeDelta = new Vector2(_btnRestOfSize, _btnIconRect[i].sizeDelta.y);
             }
-       
+
         // Icon&Text 위치 변환 안됨 -> UGUI 문제 -> refresh
         LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)_btnIconRect[0].parent);
 
@@ -265,7 +268,7 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     /// 다음 패널 진입 시 Scrollbar의 value를 1로 하여 
     /// 스크롤 상태를 초기화 
     /// </summary>
-    void VerticalScrollUp() 
+    void VerticalScrollUp()
     {
         if (_TR_Contents[_panel_Index].GetComponent<ScrollRect_>() && _panelFirtTouch != _panelNextTarget)
         {
