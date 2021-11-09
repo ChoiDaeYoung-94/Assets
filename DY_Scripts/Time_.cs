@@ -80,10 +80,26 @@ public class Time_ : MonoBehaviour
     }
 
     // 일일 출석 보상 로그인 후 갱신 체크 - 마지막 로그인 날 보다 하루가 더 지났을 경우 true
-    public static bool IsDailyRewardUpdate(DateTime nowday, DateTime oldDay)
+    public static bool IsDailyRewardUpdateLogin(DateTime nowday, DateTime oldDay)
     {
         TimeSpan span = nowday - oldDay;
-        if (span.TotalDays >= 1) return true;
+
+        // oldDay보다 span은 당연히 +여야함, 날이 다른 경우에 span이 + 이면 하루 이상 지난 것
+        if (span.TotalDays >= 0 && nowday.Day != oldDay.Day)
+            return true;
+
+        // oldDay보다 span은 당연히 +여야함, 날이 같은 경우에 span이 +10이상 이면 한달 이상 지난 것
+        if (nowday.Day == oldDay.Day && span.TotalDays >= 10)
+            return true;
+
+        return false;
+    }
+
+    // 일일 출석 보상 Update()에서 다음 날 갱신 체크 - 로그인 후 GetTomorrow로 받아온 날과 같아지면
+    public static bool IsDailyRewardUpdateCheck(DateTime nowday, DateTime oldDay)
+    {
+        TimeSpan span = nowday - oldDay;
+        if (span.TotalDays >= 0 && nowday.Day == oldDay.Day) return true;
         else return false;
     }
 
