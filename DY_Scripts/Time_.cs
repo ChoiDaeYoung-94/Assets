@@ -124,6 +124,30 @@ public class Time_ : MonoBehaviour
         else return false;
     }
 
+    // 광고 보상 로그인 후 갱신 체크 - 마지막 로그인 날 보다 한시간이 더 지났을 경우 true
+    public static bool IsADRewardUpdateLogin(DateTime nowHour, DateTime oldHour)
+    {
+        TimeSpan span = nowHour - oldHour;
+
+        // oldHour보다 span은 당연히 +여야함, 시간이 다른 경우에 span이 + 이면 한시간 이상 지난 것
+        if (span.TotalHours >= 0 && nowHour.Hour != oldHour.Hour)
+            return true;
+
+        // oldHour보다 span은 당연히 +여야함, 시간이 같은 경우에 span이 +10이상 이면 한시간 이상 지난 것
+        if (nowHour.Hour == oldHour.Hour && span.TotalHours >= 10)
+            return true;
+
+        return false;
+    }
+
+    // 광고 보상 Update()에서 정각 갱신 체크 - 로그인 후 GetHour로 받아온 시간과 같아지면
+    public static bool IsADRewardUpdateCheck(DateTime nowHour, DateTime hour)
+    {
+        TimeSpan span = nowHour - hour;
+        if (span.TotalHours >= 0 && nowHour.Hour == hour.Hour) return true;
+        else return false;
+    }
+
     // 일일 퀘스트 남은 시간 string 반환
     public static string update_Time(DateTime tomorrow, DateTime today, bool plusZero = false)
     {
