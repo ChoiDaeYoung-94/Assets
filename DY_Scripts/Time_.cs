@@ -25,6 +25,27 @@ public class Time_ : MonoBehaviour
         return span.TotalSeconds;
     }
 
+    // 현재 시간에서 매 정각 반환(현 시간이 3시면 4시반환) - Datetime
+    public static DateTime GetHour_Datetime()
+    {
+        DateTime temp_DT = DateTime.Now.AddHours(1);
+        string temp_str = temp_DT.Year.ToString() + "/" + temp_DT.Month.ToString() + "/" + (temp_DT.Day).ToString() + " " + temp_DT.Hour.ToString() + ":00:00";
+
+        return Convert.ToDateTime(temp_str);
+    }
+
+    // 현재 시간에서 매 정각(현 시간이 3시면 4시반환)까지 남은 시간 반환 - double
+    public static double GetHour_TotalSeconds()
+    {
+        DateTime temp_DT = DateTime.Now.AddHours(1);
+        string temp_str = temp_DT.Year.ToString() + "/" + temp_DT.Month.ToString() + "/" + (temp_DT.Day).ToString() + " " + temp_DT.Hour.ToString() + ":00:00";
+        DateTime tmep_DT_tomorrow = Convert.ToDateTime(temp_str);
+
+        TimeSpan span = tmep_DT_tomorrow - DateTime.Now;
+
+        return span.TotalSeconds;
+    }
+
     // string or int 형식의 시간(초)을 string으로 반환
     public static string TimeToString(object time, bool plusZero = false, bool plusSecond = false, bool colon = false)
     {
@@ -96,10 +117,10 @@ public class Time_ : MonoBehaviour
     }
 
     // 일일 출석 보상 Update()에서 다음 날 갱신 체크 - 로그인 후 GetTomorrow로 받아온 날과 같아지면
-    public static bool IsDailyRewardUpdateCheck(DateTime nowday, DateTime oldDay)
+    public static bool IsDailyRewardUpdateCheck(DateTime nowday, DateTime tomorrow)
     {
-        TimeSpan span = nowday - oldDay;
-        if (span.TotalDays >= 0 && nowday.Day == oldDay.Day) return true;
+        TimeSpan span = nowday - tomorrow;
+        if (span.TotalDays >= 0 && nowday.Day == tomorrow.Day) return true;
         else return false;
     }
 
