@@ -16,4 +16,14 @@ public class DebugError
     {
         Debug.Log("<color=red>Error</color> - " + where + "\nThere is no " + item);
     }
+
+    public static void LoadError(string where, string pass)
+    {
+        Debug.Log("<color=red>Error</color> - " + where + "\nFailed to Load - path : " + pass);
+    }
+
+    public static void InstantiateError(string where, string pass)
+    {
+        Debug.Log("<color=red>Error</color> - " + where + "\nFailed to Instantiate - path : " + pass);
+    }
 }
