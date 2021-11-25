@@ -3,13 +3,12 @@ using UnityEditor;
 #endif
 
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class Managers : MonoBehaviour
 {
     /// <summary>
-    /// Singleton - °´Ã¼ ¿ÀÁ÷ 1
-    /// Manager°ü·Ã script ¸ğµÎ µî·Ï
+    /// Singleton - ê°ì²´ ì˜¤ì§ 1
+    /// Managerê´€ë ¨ script ëª¨ë‘ ë“±ë¡
     /// </summary>
     static Managers instance;
     public static Managers Instance { get { return instance; } }
@@ -35,6 +34,8 @@ public class Managers : MonoBehaviour
             DontDestroyOnLoad(go);
             instance = go.GetComponent<Managers>();
         }
+        else
+            Destroy(gameObject);
     }
 
 #if UNITY_EDITOR
@@ -43,7 +44,7 @@ public class Managers : MonoBehaviour
     {
         public override void OnInspectorGUI()
         {
-            EditorGUILayout.HelpBox("ÃÊ±â ¸Ş´ÏÀú ¼¼ÆÃ", MessageType.Info);
+            EditorGUILayout.HelpBox("ì´ˆê¸° ë©”ë‹ˆì € ì„¸íŒ…", MessageType.Info);
 
             base.OnInspectorGUI();
         }
