@@ -13,6 +13,12 @@ public class Managers : MonoBehaviour
     static Managers instance;
     public static Managers Instance { get { return instance; } }
 
+    GameManager _gameM = new GameManager();
+    public static GameManager GameM { get { return instance._gameM; } }
+
+    ResourceManager _resourceM = new ResourceManager();
+    public static ResourceManager ResourceM { get { return instance._resourceM; } }
+
     private void Awake()
     {
         Init();
@@ -22,12 +28,10 @@ public class Managers : MonoBehaviour
     {
         if (instance == null)
         {
-            GameObject go = GameObject.Find("Settings");
+            GameObject go = GameObject.Find("Manager");
             if (go == null)
             {
-                go = new GameObject { name = "Settings" };
-                go.AddComponent<EventSystem>();
-                go.AddComponent<StandaloneInputModule>();
+                go = new GameObject { name = "Manager" };
                 go.AddComponent<Managers>();
             }
 
