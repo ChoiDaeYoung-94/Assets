@@ -12,19 +12,19 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public static ScrollView Instance { get { return instance; } }
 
     [Header("패널 수, 첫 번째 패널 지정")]
-    [Tooltip("패널 개수 지정")] [SerializeField] int _panelSize = 0;
-    [Tooltip("첫 패널 지정")] [SerializeField] short _setFirstPanel = 0;
+    [SerializeField, Tooltip("패널 개수 지정")] int _panelSize = 0;
+    [SerializeField, Tooltip("첫 패널 지정")] short _setFirstPanel = 0;
 
     [Header("하단 메뉴 버튼 크기 및 고정 여부, Lerp 지정")]
-    [Tooltip("현재 패널 버튼의 크기")] [SerializeField] float _btnCurrentSize = 0;
-    [Tooltip("하단 메뉴 버튼 크기 고정 여부")] [SerializeField] bool _isFixedMenuBtnSize = false;
-    [Tooltip("하단 메뉴 버튼 Icon Lerp 여부")] [SerializeField] bool _isLerpMenuIconSize = false;
-    [Tooltip("하단 메뉴 버튼 Icon, Text 둘 다 Lerp 할지")] [SerializeField] bool _isLerpBothOfThem = false;
+    [SerializeField, Tooltip("현재 패널 버튼의 크기")] float _btnCurrentSize = 0;
+    [SerializeField, Tooltip("하단 메뉴 버튼 크기 고정 여부")] bool _isFixedMenuBtnSize = false;
+    [SerializeField, Tooltip("하단 메뉴 버튼 Icon Lerp 여부")] bool _isLerpMenuIconSize = false;
+    [SerializeField, Tooltip("하단 메뉴 버튼 Icon, Text 둘 다 Lerp 할지")] bool _isLerpBothOfThem = false;
 
     [Header("하단 메뉴 버튼의 아이콘 lerp Y, scale")]
-    [Tooltip("현재 패널 버튼의 아이콘 y축 올릴 정도")] [SerializeField] float _btnIconLerpHeight = 0;
+    [SerializeField, Tooltip("현재 패널 버튼의 아이콘 y축 올릴 정도")] float _btnIconLerpHeight = 0;
     [Tooltip("나머지 패널 버튼의 아이콘 Position")] Vector3 _btnIconPos = Vector3.zero;
-    [Tooltip("현재 패널 버튼의 아이콘 y축 올릴때 스케일")] [SerializeField] float _btnIconLerpScale = 0;
+    [SerializeField, Tooltip("현재 패널 버튼의 아이콘 y축 올릴때 스케일")] float _btnIconLerpScale = 0;
 
     [Header("버튼, 아이콘 RectTransform 미리 연동해야 함")]
     [Tooltip("가로로 스크롤 할때의 value를 가져오기 위한 Scrollbar")]
@@ -36,14 +36,14 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     [Tooltip("BottomMenu_Button's Child Text_GameObject")] GameObject[] _TextGo = null;
 
     [Header("아래 부턴 참고용 연동 X-----------------------------------------------------------------------------------------------------------------")]
-    [Tooltip("각 패널의 scroll Value상의 거리(패널 간격)")] [SerializeField] float _panelDis = 0;
-    [Tooltip("각 패널의 scroll Value -> Init에서 초기화")] [SerializeField] float[] _panelScrollValue = null;
+    [SerializeField, Tooltip("각 패널의 scroll Value상의 거리(패널 간격)")] float _panelDis = 0;
+    [SerializeField, Tooltip("각 패널의 scroll Value -> Init에서 초기화")] float[] _panelScrollValue = null;
 
-    [Tooltip("현재 패널의 Index - 1")] [SerializeField] int _panel_Index = 0;
-    [Tooltip("존재하는 패널의 transform")] [SerializeField] Transform[] _TR_Contents = null;
+    [SerializeField, Tooltip("현재 패널의 Index - 1")] int _panel_Index = 0;
+    [SerializeField, Tooltip("존재하는 패널의 transform")] Transform[] _TR_Contents = null;
     float _panelFirtTouch = 0, _panelNextTarget = 0; // 첫 터치할때의 패널과 endDrag일때의 패널의 scrollvalue
 
-    [Tooltip("나머지 패널 버튼의 크기")] [SerializeField] float _btnRestOfSize = 0;
+    [SerializeField, Tooltip("나머지 패널 버튼의 크기")] float _btnRestOfSize = 0;
 
     [Tooltip("Drag 여부")] bool _isDrag = false;
 
