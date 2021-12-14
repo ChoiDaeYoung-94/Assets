@@ -41,6 +41,11 @@ public class Managers : MonoBehaviour
         else
             Destroy(gameObject);
     }
+    
+    private void OnDestroy()
+    {
+        instance = null;
+    }
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(Managers))]
