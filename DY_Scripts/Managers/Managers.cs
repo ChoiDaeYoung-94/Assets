@@ -13,9 +13,6 @@ public class Managers : MonoBehaviour
     static Managers instance;
     public static Managers Instance { get { return instance; } }
 
-    GameManager _gameM = new GameManager();
-    public static GameManager GameM { get { return instance._gameM; } }
-
     ResourceManager _resourceM = new ResourceManager();
     public static ResourceManager ResourceM { get { return instance._resourceM; } }
 
