@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Time_ : MonoBehaviour
 {
-    // ´ÙÀ½ ³¯ 00:00 ¹İÈ¯ - Datetime
+    // ë‹¤ìŒ ë‚  00:00 ë°˜í™˜ - Datetime
     public static DateTime GetTomorrow_Datetime()
     {
         DateTime temp_DT = DateTime.Now.AddDays(1);
@@ -13,7 +13,7 @@ public class Time_ : MonoBehaviour
         return Convert.ToDateTime(temp_str);
     }
 
-    // ´ÙÀ½ ³¯ (00:00)±îÁö ³²Àº ½Ã°£ ¹İÈ¯ -> double
+    // ë‹¤ìŒ ë‚  (00:00)ê¹Œì§€ ë‚¨ì€ ì‹œê°„ ë°˜í™˜ -> double
     public static double GetTomorrow_TotalSeconds()
     {
         DateTime temp_DT = DateTime.Now.AddDays(1);
@@ -25,7 +25,7 @@ public class Time_ : MonoBehaviour
         return span.TotalSeconds;
     }
 
-    // ÇöÀç ½Ã°£¿¡¼­ ¸Å Á¤°¢ ¹İÈ¯(Çö ½Ã°£ÀÌ 3½Ã¸é 4½Ã¹İÈ¯) - Datetime
+    // í˜„ì¬ ì‹œê°„ì—ì„œ ë§¤ ì •ê° ë°˜í™˜(í˜„ ì‹œê°„ì´ 3ì‹œë©´ 4ì‹œë°˜í™˜) - Datetime
     public static DateTime GetHour_Datetime()
     {
         DateTime temp_DT = DateTime.Now.AddHours(1);
@@ -34,7 +34,7 @@ public class Time_ : MonoBehaviour
         return Convert.ToDateTime(temp_str);
     }
 
-    // ÇöÀç ½Ã°£¿¡¼­ ¸Å Á¤°¢(Çö ½Ã°£ÀÌ 3½Ã¸é 4½Ã¹İÈ¯)±îÁö ³²Àº ½Ã°£ ¹İÈ¯ - double
+    // í˜„ì¬ ì‹œê°„ì—ì„œ ë§¤ ì •ê°(í˜„ ì‹œê°„ì´ 3ì‹œë©´ 4ì‹œë°˜í™˜)ê¹Œì§€ ë‚¨ì€ ì‹œê°„ ë°˜í™˜ - double
     public static double GetHour_TotalSeconds()
     {
         DateTime temp_DT = DateTime.Now.AddHours(1);
@@ -46,7 +46,7 @@ public class Time_ : MonoBehaviour
         return span.TotalSeconds;
     }
 
-    // string or int Çü½ÄÀÇ ½Ã°£(ÃÊ)À» stringÀ¸·Î ¹İÈ¯
+    // string or int í˜•ì‹ì˜ ì‹œê°„(ì´ˆ)ì„ stringìœ¼ë¡œ ë°˜í™˜
     public static string TimeToString(object time, bool plusZero = false, bool plusSecond = false, bool colon = false)
     {
         double _time = 0;
@@ -90,33 +90,33 @@ public class Time_ : MonoBehaviour
         }
         else
         {
-            if (hour.Length != 0) temp.Append(hour + "½Ã°£ ");
-            if (minute.Length != 0) temp.Append(minute + "ºĞ");
+            if (hour.Length != 0) temp.Append(hour + "ì‹œê°„ ");
+            if (minute.Length != 0) temp.Append(minute + "ë¶„");
 
             if (plusSecond || (hour.Length == 0 && minute.Length == 0))
-                temp.Append(" " + second + "ÃÊ");
+                temp.Append(" " + second + "ì´ˆ");
         }
 
         return temp.ToString();
     }
 
-    // ÀÏÀÏ Ãâ¼® º¸»ó ·Î±×ÀÎ ÈÄ °»½Å Ã¼Å© - ¸¶Áö¸· ·Î±×ÀÎ ³¯ º¸´Ù ÇÏ·ç°¡ ´õ Áö³µÀ» °æ¿ì true
+    // ì¼ì¼ ì¶œì„ ë³´ìƒ ë¡œê·¸ì¸ í›„ ê°±ì‹  ì²´í¬ - ë§ˆì§€ë§‰ ë¡œê·¸ì¸ ë‚  ë³´ë‹¤ í•˜ë£¨ê°€ ë” ì§€ë‚¬ì„ ê²½ìš° true
     public static bool IsDailyRewardUpdateLogin(DateTime nowday, DateTime oldDay)
     {
         TimeSpan span = nowday - oldDay;
 
-        // oldDayº¸´Ù spanÀº ´ç¿¬È÷ +¿©¾ßÇÔ, ³¯ÀÌ ´Ù¸¥ °æ¿ì¿¡ spanÀÌ + ÀÌ¸é ÇÏ·ç ÀÌ»ó Áö³­ °Í
+        // oldDayë³´ë‹¤ spanì€ ë‹¹ì—°íˆ +ì—¬ì•¼í•¨, ë‚ ì´ ë‹¤ë¥¸ ê²½ìš°ì— spanì´ + ì´ë©´ í•˜ë£¨ ì´ìƒ ì§€ë‚œ ê²ƒ
         if (span.TotalDays >= 0 && nowday.Day != oldDay.Day)
             return true;
 
-        // oldDayº¸´Ù spanÀº ´ç¿¬È÷ +¿©¾ßÇÔ, ³¯ÀÌ °°Àº °æ¿ì¿¡ spanÀÌ +10ÀÌ»ó ÀÌ¸é ÇÑ´Ş ÀÌ»ó Áö³­ °Í
+        // oldDayë³´ë‹¤ spanì€ ë‹¹ì—°íˆ +ì—¬ì•¼í•¨, ë‚ ì´ ê°™ì€ ê²½ìš°ì— spanì´ +10ì´ìƒ ì´ë©´ í•œë‹¬ ì´ìƒ ì§€ë‚œ ê²ƒ
         if (nowday.Day == oldDay.Day && span.TotalDays >= 10)
             return true;
 
         return false;
     }
 
-    // ÀÏÀÏ Ãâ¼® º¸»ó Update()¿¡¼­ ´ÙÀ½ ³¯ °»½Å Ã¼Å© - ·Î±×ÀÎ ÈÄ GetTomorrow·Î ¹Ş¾Æ¿Â ³¯°ú °°¾ÆÁö¸é
+    // ì¼ì¼ ì¶œì„ ë³´ìƒ Update()ì—ì„œ ë‹¤ìŒ ë‚  ê°±ì‹  ì²´í¬ - ë¡œê·¸ì¸ í›„ GetTomorrowë¡œ ë°›ì•„ì˜¨ ë‚ ê³¼ ê°™ì•„ì§€ë©´
     public static bool IsDailyRewardUpdateCheck(DateTime nowday, DateTime tomorrow)
     {
         TimeSpan span = nowday - tomorrow;
@@ -124,23 +124,23 @@ public class Time_ : MonoBehaviour
         else return false;
     }
 
-    // ±¤°í º¸»ó ·Î±×ÀÎ ÈÄ °»½Å Ã¼Å© - ¸¶Áö¸· ·Î±×ÀÎ ³¯ º¸´Ù ÇÑ½Ã°£ÀÌ ´õ Áö³µÀ» °æ¿ì true
+    // ê´‘ê³  ë³´ìƒ ë¡œê·¸ì¸ í›„ ê°±ì‹  ì²´í¬ - ë§ˆì§€ë§‰ ë¡œê·¸ì¸ ë‚  ë³´ë‹¤ í•œì‹œê°„ì´ ë” ì§€ë‚¬ì„ ê²½ìš° true
     public static bool IsADRewardUpdateLogin(DateTime nowHour, DateTime oldHour)
     {
         TimeSpan span = nowHour - oldHour;
 
-        // oldHourº¸´Ù spanÀº ´ç¿¬È÷ +¿©¾ßÇÔ, ½Ã°£ÀÌ ´Ù¸¥ °æ¿ì¿¡ spanÀÌ + ÀÌ¸é ÇÑ½Ã°£ ÀÌ»ó Áö³­ °Í
+        // oldHourë³´ë‹¤ spanì€ ë‹¹ì—°íˆ +ì—¬ì•¼í•¨, ì‹œê°„ì´ ë‹¤ë¥¸ ê²½ìš°ì— spanì´ + ì´ë©´ í•œì‹œê°„ ì´ìƒ ì§€ë‚œ ê²ƒ
         if (span.TotalHours >= 0 && nowHour.Hour != oldHour.Hour)
             return true;
 
-        // oldHourº¸´Ù spanÀº ´ç¿¬È÷ +¿©¾ßÇÔ, ½Ã°£ÀÌ °°Àº °æ¿ì¿¡ spanÀÌ +10ÀÌ»ó ÀÌ¸é ÇÑ½Ã°£ ÀÌ»ó Áö³­ °Í
+        // oldHourë³´ë‹¤ spanì€ ë‹¹ì—°íˆ +ì—¬ì•¼í•¨, ì‹œê°„ì´ ê°™ì€ ê²½ìš°ì— spanì´ +10ì´ìƒ ì´ë©´ í•œì‹œê°„ ì´ìƒ ì§€ë‚œ ê²ƒ
         if (nowHour.Hour == oldHour.Hour && span.TotalHours >= 10)
             return true;
 
         return false;
     }
 
-    // ±¤°í º¸»ó Update()¿¡¼­ Á¤°¢ °»½Å Ã¼Å© - ·Î±×ÀÎ ÈÄ GetHour·Î ¹Ş¾Æ¿Â ½Ã°£°ú °°¾ÆÁö¸é
+    // ê´‘ê³  ë³´ìƒ Update()ì—ì„œ ì •ê° ê°±ì‹  ì²´í¬ - ë¡œê·¸ì¸ í›„ GetHourë¡œ ë°›ì•„ì˜¨ ì‹œê°„ê³¼ ê°™ì•„ì§€ë©´
     public static bool IsADRewardUpdateCheck(DateTime nowHour, DateTime hour)
     {
         TimeSpan span = nowHour - hour;
@@ -148,7 +148,7 @@ public class Time_ : MonoBehaviour
         else return false;
     }
 
-    // ÀÏÀÏ Äù½ºÆ® ³²Àº ½Ã°£ string ¹İÈ¯
+    // ì¼ì¼ í€˜ìŠ¤íŠ¸ ë‚¨ì€ ì‹œê°„ string ë°˜í™˜
     public static string update_Time(DateTime tomorrow, DateTime today, bool plusZero = false)
     {
         string temp = string.Empty;

@@ -4,13 +4,13 @@ using UnityEngine.EventSystems;
 
 public class ScrollRect_ : ScrollRect
 {
-    [Tooltip("ÀÚ½Ä ½ºÅ©·Ñºä¸¦ ÄÁÆ®·Ñ ÇÒ °æ¿ì HorizontalÀº ºÎ¸ğ ½ºÅ©·ÑºäÀÇ ¿ªÇÒ·Î")]
+    [Tooltip("ìì‹ ìŠ¤í¬ë¡¤ë·°ë¥¼ ì»¨íŠ¸ë¡¤ í•  ê²½ìš° Horizontalì€ ë¶€ëª¨ ìŠ¤í¬ë¡¤ë·°ì˜ ì—­í• ë¡œ")]
     bool _horizontal;
 
     ScrollView _parentScroll = null;
     ScrollRect _parentScrollRect = null;
 
-    // ºÎ¸ğ ½ºÅ©·Ñºä Init½Ã °°ÀÌ ½ÇÇà
+    // ë¶€ëª¨ ìŠ¤í¬ë¡¤ë·° Initì‹œ ê°™ì´ ì‹¤í–‰
     public void Init()
     {
         GameObject Scroll_H = GameObject.Find("SlideCanvas");
@@ -21,8 +21,8 @@ public class ScrollRect_ : ScrollRect
     public override void OnBeginDrag(PointerEventData eventData)
     {
         /// <summary>
-        /// x°¡ ´õ Å©¸é ¼öÆò ÀÌµ¿ÀÌ ´õ Å©´Ï±î ºÎ¸ğ ½ºÅ©·Ñºä ÄÁÆ®·Ñ
-        /// y°¡ ´õ Å©¸é ¼öÁ÷ ÀÌµ¿ÀÌ ´õ Å©´Ï±î ÀÚ½Ä ½ºÅ©·Ñºä ÄÁÆ®·Ñ
+        /// xê°€ ë” í¬ë©´ ìˆ˜í‰ ì´ë™ì´ ë” í¬ë‹ˆê¹Œ ë¶€ëª¨ ìŠ¤í¬ë¡¤ë·° ì»¨íŠ¸ë¡¤
+        /// yê°€ ë” í¬ë©´ ìˆ˜ì§ ì´ë™ì´ ë” í¬ë‹ˆê¹Œ ìì‹ ìŠ¤í¬ë¡¤ë·° ì»¨íŠ¸ë¡¤
         /// </summary>
         _horizontal = Mathf.Abs(eventData.delta.x) > Mathf.Abs(eventData.delta.y);
 

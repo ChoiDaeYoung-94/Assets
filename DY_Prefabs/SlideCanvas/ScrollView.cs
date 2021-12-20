@@ -62,6 +62,11 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         Init();
     }
+    
+    private void OnDestroy()
+    {
+        instance = null;
+    }
 
     void Init()
     {

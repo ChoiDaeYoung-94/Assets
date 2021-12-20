@@ -8,15 +8,15 @@ using UnityEngine;
 public class Initialize : MonoBehaviour
 {
     /// <summary>
-    /// ÃÊ±âÈ­ ÇØ¾ßÇÏ´Â ½ºÅ©¸³Æ®µéÀÇ ÀÌ¸§À» ±×´ë·Î ¼±¾ğ
-    /// -> ¸ÕÀú ÀûÀº ¼øÀ¸·Î ÃÊ±âÈ­ ÁøÇà
+    /// ì´ˆê¸°í™” í•´ì•¼í•˜ëŠ” ìŠ¤í¬ë¦½íŠ¸ë“¤ì˜ ì´ë¦„ì„ ê·¸ëŒ€ë¡œ ì„ ì–¸
+    /// -> ë¨¼ì € ì ì€ ìˆœìœ¼ë¡œ ì´ˆê¸°í™” ì§„í–‰
     /// </summary>
     enum Scripts
     {
 
     }
 
-    [Tooltip("ÃÊ±âÈ­ ÇØ¾ß ÇÒ ½ºÅ©¸³Æ®¸¦ Áö´Ñ °ÔÀÓ¿ÀºêÁ§Æ®")]
+    [Tooltip("ì´ˆê¸°í™” í•´ì•¼ í•  ìŠ¤í¬ë¦½íŠ¸ë¥¼ ì§€ë‹Œ ê²Œì„ì˜¤ë¸Œì íŠ¸")]
     [SerializeField] GameObject[] _go_initialze = null;
 
     private void Awake()
@@ -27,7 +27,7 @@ public class Initialize : MonoBehaviour
             {
                 if (item.GetComponent(script.ToString()) != null)
                 {
-                    // ½ÇÇàÇØ¾ß ÇÒ ¸Ş¼­µå
+                    // ì‹¤í–‰í•´ì•¼ í•  ë©”ì„œë“œ
                     item.GetComponent(script.ToString()).SendMessage("");
                     break;
                 }
@@ -41,7 +41,7 @@ public class Initialize : MonoBehaviour
     {
         public override void OnInspectorGUI()
         {
-            EditorGUILayout.HelpBox("ÃÊ±âÈ­ ¼ø¼­¸¦ ÁöÁ¤ÇÒ °æ¿ì »ç¿ë", MessageType.Info);
+            EditorGUILayout.HelpBox("ì´ˆê¸°í™” ìˆœì„œë¥¼ ì§€ì •í•  ê²½ìš° ì‚¬ìš©", MessageType.Info);
 
             base.OnInspectorGUI();
         }
