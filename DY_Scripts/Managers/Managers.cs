@@ -19,6 +19,9 @@ public class Managers : MonoBehaviour
     PoolManager _poolM = new PoolManager();
     public static PoolManager PoolM { get { return instance._poolM; } }
 
+    PopupManager _popupM = new PopupManager();
+    public static PopupManager PopupM { get { return instance._popupM; } }
+
     ResourceManager _resourceM = new ResourceManager();
     public static ResourceManager ResourceM { get { return instance._resourceM; } }
 
@@ -46,11 +49,12 @@ public class Managers : MonoBehaviour
 
             DataM.Init();
             PoolM.Init();
+            PopupM.Init();
         }
         else
             Destroy(gameObject);
     }
-    
+
     private void OnDestroy()
     {
         instance = null;
@@ -69,6 +73,7 @@ public class Managers : MonoBehaviour
     {
         DataM.Init();
         PoolM.Init();
+        PopupM.Init();
     }
 
     /// <summary>

@@ -1,13 +1,16 @@
 using UnityEngine;
 
-public class Define : MonoBehaviour
+namespace DY
 {
-    /// <summary>
-    /// Test
-    /// </summary>
-    public enum Test
+    public class Define : MonoBehaviour
     {
-        Test_01,
-        Test_02
+        /// <summary>
+        /// Test
+        /// </summary>
+        public enum Test
+        {
+            Test_01,
+            Test_02
+        }
     }
 }
