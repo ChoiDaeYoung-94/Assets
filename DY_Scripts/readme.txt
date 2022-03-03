@@ -1,4 +1,4 @@
-*	DebugError.cs	: 오류 debug
+*	Debug.cs		: 자체 debug
 
 *	Extension.cs	: Extension Methods
 
@@ -8,4 +8,4 @@
 
 *	SetFPS.cs		: 프레임 설정
 
-*	Time_.cs		: 시간 관련 체크, 반환
+*	Time.cs			: 시간 관련 체크, 반환
