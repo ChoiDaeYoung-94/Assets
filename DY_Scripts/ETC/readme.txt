@@ -6,8 +6,6 @@
 
 *	Initialize.cs	: 초기화 순서 지정
 
-*	PoolObject.cs	: Pool로 사용할 경우
-
 *	ScreenSize.cs	: 타이틀 사이즈 기기대응
 
 *	SetFPS.cs		: 프레임 설정

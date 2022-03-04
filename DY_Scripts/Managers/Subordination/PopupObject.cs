@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PopupObj : MonoBehaviour
+public class PopupObject : MonoBehaviour
 {
     enum CheckType
     {
