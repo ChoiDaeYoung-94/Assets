@@ -16,6 +16,6 @@ public class DataManager
     public void Init()
     {
         string getTest = Managers.ResourceM.Load<TextAsset>("DataManager", "Data/getTest").ToString();
-        _dic_test = Utils.JsonToObject(getMonsters) as Dictionary<string, object>;
+        _dic_test = Utils.JsonToObject(getTest) as Dictionary<string, object>;
     }
 }

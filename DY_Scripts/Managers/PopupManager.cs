@@ -31,7 +31,6 @@ public class PopupManager
 
     void Onupdate()
     {
-        //Debug.Log(isException + " : check");
         if (Application.platform == RuntimePlatform.Android)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -112,13 +111,13 @@ public class PopupManager
         {
             if (!isGameScene)
             {
-                GameObject quitPop = UIDirectManager.Instance._go_popup[UIDirectManager.Instance._go_popup.Length - 1];
+                GameObject quitPop = null; // 나가기 팝업 받아야 함
                 if (!quitPop.activeSelf)
                     quitPop.SetActive(true);
             }
             else
             {
-                GameObject goLobby = IngameUIDirectManager.Instance.exitPop;
+                GameObject goLobby = null; // 로비 가는 팝업 받아야 함
                 if (!goLobby.activeSelf)
                     goLobby.SetActive(true);
             }
@@ -149,7 +148,6 @@ public class PopupManager
     public void InitGame()
     {
         _popupStack.Clear();
-        Managers.DataM._is5Tutorial = false;
         isGameScene = true;
         isException = true;
     }

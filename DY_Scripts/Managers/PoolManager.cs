@@ -172,7 +172,7 @@ public class PoolManager
     {
         if (!_dic_pool.ContainsKey(go_name))
         {
-            DebugError.Contain("PoolManager", $"{go_name} in _dic_pool");
+            DY.Debug.Contain("PoolManager", $"{go_name} in _dic_pool");
             return;
         }
 
