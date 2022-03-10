@@ -25,8 +25,22 @@ public class ContentManage : MonoBehaviour
     ContentSizeFitter _CSF_content = null;
 
     [Header("--- 참고용 ---")]
+    [SerializeField, Tooltip("더해줄 최소 생성 라인 수")]
+    int _minPlusLine = 3;
     [SerializeField, Tooltip("계산된 View의 총 Height")]
     float _contentHeight = 0;
+    [SerializeField, Tooltip("첫 라인 Height")]
+    float _startAnchorY = 0;
+    [SerializeField, Tooltip("마지막 라인 Height")]
+    float _endAnchorY = 0;
+    [SerializeField, Tooltip("라인간 Height 간격")]
+    float _intervalHeight = 0;
+    [SerializeField, Tooltip("constraintCount의 따른 anchoredPositionX 배치")]
+    List<float> _list_anchorX = new List<float>();
+    [SerializeField, Tooltip("마지막 item Width")]
+    float _endAnchorX = 0;
+    [SerializeField, Tooltip("마지막 item index")]
+    int _endIndex = 0;
 
     private void Start()
     {
@@ -43,6 +57,7 @@ public class ContentManage : MonoBehaviour
     #region Functions
     /// <summary>
     /// Item, spacing, padding을 고려한 Content의 총 Height 계산
+    /// 그외 필요한 부분 계산
     /// </summary>
     void SetContentHeight()
     {
@@ -55,20 +70,42 @@ public class ContentManage : MonoBehaviour
         _contentHeight = contentSize + contentSpacingSize + GLGTopBotPadding;
 
         _RTR_content.sizeDelta = new Vector2(_RTR_content.sizeDelta.x, _contentHeight);
+
+        _intervalHeight = _GLG_content.cellSize.y + _GLG_content.spacing.y;
     }
 
     /// <summary>
-    /// Item을 최소 라인수를 맞춰 생성 뒤 GLG, CSF를 비활성화
+    /// Item을 최소 라인수를 맞춰 생성
+    /// 생성 후 필요한 값들 계산
+    /// GLG, CSF를 비활성화
     /// </summary>
     void CreateTarget()
     {
         float height = _RTR_parentView.sizeDelta.y - _GLG_content.padding.top;
-        int minLine = (int)Math.Truncate(height / (_GLG_content.cellSize.y + _GLG_content.spacing.y)) + 2;
+        int minLine = (int)Math.Truncate(height / (_GLG_content.cellSize.y + _GLG_content.spacing.y)) + _minPlusLine;
 
+        int x = -1;
         for (int i = -1; ++i < minLine * _GLG_content.constraintCount;)
-            Instantiate(_go_item, _RTR_content).SetActive(true);
+        {
+            GameObject item = Instantiate(_go_item, _RTR_content);
+            item.SetActive(true);
 
-        LayoutRebuilder.ForceRebuildLayoutImmediate(_RTR_content);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_RTR_content);
+
+            if (i == 0)
+                _startAnchorY = item.GetComponent<RectTransform>().anchoredPosition.y;
+
+            if (++x < _GLG_content.constraintCount)
+                _list_anchorX.Add(item.GetComponent<RectTransform>().anchoredPosition.x);
+
+            if (i + 1 >= _amount || i + 1 >= minLine * _GLG_content.constraintCount)
+            {
+                _endAnchorX = item.GetComponent<RectTransform>().anchoredPosition.x;
+                _endAnchorY = item.GetComponent<RectTransform>().anchoredPosition.y;
+                _endIndex = i + 1;
+                break;
+            }
+        }
 
         _GLG_content.enabled = false;
         _CSF_content.enabled = false;
@@ -80,9 +117,12 @@ public class ContentManage : MonoBehaviour
     /// </summary>
     public void SetContentItems()
     {
-        if (_RTR_content.anchoredPosition.y <= 0 || 
+        if (_RTR_content.anchoredPosition.y <= 0 ||
             _RTR_content.anchoredPosition.y >= _RTR_content.sizeDelta.y - _RTR_parentView.sizeDelta.y)
             return;
+
+        //TODO -> 윗 라인 먼저 계산 해보자
+        //if (_RTR_content.anchoredPosition.y)
     }
     #endregion
 
