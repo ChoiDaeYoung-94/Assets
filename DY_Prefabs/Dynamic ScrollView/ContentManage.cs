@@ -147,12 +147,14 @@ public class ContentManage : MonoBehaviour
         if (_RTR_content.anchoredPosition.y > _curPosY)
         {
             Debug.Log("스크롤 내리는 중");
+
             _curPosY = _RTR_content.anchoredPosition.y;
             ContentManageUpLine();
         }
         else
         {
             Debug.Log("스크롤 올리는 중");
+
             _curPosY = _RTR_content.anchoredPosition.y;
             ContentManageDownLine();
         }
@@ -162,16 +164,17 @@ public class ContentManage : MonoBehaviour
     {
         // 현재 라인이 item의 머리 끝에 닿았을 때 그 위에 아이템이 존재할 경우 비활성화 하기 위함
         // => 머리 끝 부분의 PosY 구하기 위함
-        double index_up = Math.Truncate((_RTR_content.anchoredPosition.y - _GLG_content.padding.top) / _intervalHeight);
+        double index_up = (_RTR_content.anchoredPosition.y - _GLG_content.padding.top) / _intervalHeight;
+        Debug.Log(Math.Truncate(index_up));
 
-        if (index_up > 0)
+        if (index_up > 1)
         {
-            Debug.Log(_LL_items.Count + " ---- " + _LL_enabledItems.Count);
-
             // 위 부분을 다 _LL_enabledItems(비활성 리스트)에 추가 후 비활성화
             foreach (RectTransform item in _LL_items)
             {
-                if (item.anchoredPosition.y - _GLG_content.cellSize.y > -_RTR_content.anchoredPosition.y)
+                Debug.Log(item.anchoredPosition.y - _GLG_content.cellSize.y - _GLG_content.spacing.y);
+
+                if (item.anchoredPosition.y - _GLG_content.cellSize.y - _GLG_content.spacing.y > -_RTR_content.anchoredPosition.y)
                 {
                     _LL_enabledItems.AddLast(item);
                     item.gameObject.SetActive(false);
@@ -179,7 +182,6 @@ public class ContentManage : MonoBehaviour
                 else
                     break;
             }
-            Debug.Log(_LL_items.Count + " ---- " + _LL_enabledItems.Count);
 
             // 비활성화 한 item들을 _LL_items에서 지운 뒤 위치 조절 후 활성화
             if (_LL_enabledItems != null && _LL_enabledItems.Count > 0)
