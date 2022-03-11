@@ -35,6 +35,8 @@ public class ContentManage : MonoBehaviour
     float _curPosY = 0;
     [SerializeField, Tooltip("계산된 View의 총 Height")]
     float _contentHeight = 0;
+    [SerializeField, Tooltip("첫 라인 Height 참고만 하는 값")]
+    float _org_startAnchorY = 0;
     [SerializeField, Tooltip("첫 라인 Height")]
     float _startAnchorY = 0;
     [SerializeField, Tooltip("마지막 라인 Height")]
@@ -106,7 +108,7 @@ public class ContentManage : MonoBehaviour
 
             // 첫 줄의 item의 y 값 받음
             if (i == 0)
-                _startAnchorY = rtrItem.anchoredPosition.y;
+                _org_startAnchorY = _startAnchorY = rtrItem.anchoredPosition.y;
 
             // 한 줄에서 나올 수 있는 x 값 받음
             if (++x < _GLG_content.constraintCount)
@@ -162,6 +164,9 @@ public class ContentManage : MonoBehaviour
 
     void ContentManageUpLine()
     {
+        if (_endIndex + 1 > _amount)
+            return;
+
         // 현재 라인이 item의 머리 끝에 닿았을 때 그 위에 아이템이 존재할 경우 비활성화 하기 위함
         // => 머리 끝 부분의 PosY 구하기 위함
         double index_up = (_RTR_content.anchoredPosition.y - _GLG_content.padding.top) / _intervalHeight;
@@ -172,8 +177,6 @@ public class ContentManage : MonoBehaviour
             // 위 부분을 다 _LL_enabledItems(비활성 리스트)에 추가 후 비활성화
             foreach (RectTransform item in _LL_items)
             {
-                Debug.Log(item.anchoredPosition.y - _GLG_content.cellSize.y - _GLG_content.spacing.y);
-
                 if (item.anchoredPosition.y - _GLG_content.cellSize.y - _GLG_content.spacing.y > -_RTR_content.anchoredPosition.y)
                 {
                     _LL_enabledItems.AddLast(item);
@@ -191,18 +194,20 @@ public class ContentManage : MonoBehaviour
 
                 foreach (RectTransform item in _LL_enabledItems)
                 {
-                    if (_endAnchorX_index + 1 >= _list_anchorX.Count)
-                    {
-                        _endAnchorX_index = 0;
-                        _endAnchorY -= _intervalHeight;
-                    }
-                    else
-                        ++_endAnchorX_index;
-
                     if (_endIndex + 1 <= _amount)
                     {
                         ++_endIndex;
                         _LL_items.AddLast(item);
+
+                        if (_endAnchorX_index + 1 >= _list_anchorX.Count)
+                        {
+                            _endAnchorX_index = 0;
+                            _startAnchorY -= _intervalHeight;
+                            _endAnchorY -= _intervalHeight;
+                        }
+                        else
+                            ++_endAnchorX_index;
+
                         item.anchoredPosition = new Vector2(_list_anchorX[(int)_endAnchorX_index], _endAnchorY);
                         item.gameObject.SetActive(true);
                     }
@@ -218,7 +223,47 @@ public class ContentManage : MonoBehaviour
 
     void ContentManageDownLine()
     {
+        if (_LL_items.First.Value.anchoredPosition.y == _org_startAnchorY)
+            return;
 
+        // 현재 라인이 item의 머리 끝에 닿았을 때 그 위에 아이템이 존재하지 않을 경우 활성화 하기 위함
+        // => 머리 끝 부분의 PosY 구하기 위함
+        double index_up = (_RTR_content.anchoredPosition.y - _GLG_content.padding.top) / _intervalHeight;
+        Debug.Log(Math.Truncate(index_up));
+
+        if (index_up > 1)
+        {
+            // 윗 라인이 존재하지 않을 경우
+            if (_LL_items.First.Value.anchoredPosition.y <= _startAnchorY + _intervalHeight)
+            {
+                _startAnchorY += _intervalHeight;
+
+                // column count 만큼 위로 활성화 해주면 됨
+                for (int i = _GLG_content.constraintCount; --i > -1;)
+                {
+                    --_endIndex;
+
+                    // 먼저 비활성화 되어있는 item이 있나 확인
+                    if (_LL_enabledItems != null && _LL_enabledItems.Count > 0)
+                    {
+                        _LL_enabledItems.Last.Value.anchoredPosition = new Vector2(_list_anchorX[i], _startAnchorY);
+                        _LL_enabledItems.Last.Value.gameObject.SetActive(true);
+
+                        _LL_items.AddFirst(_LL_enabledItems.Last.Value);
+                        _LL_enabledItems.RemoveLast();
+                    }
+                    else // 그 뒤 _LL_items에서 남은 count만큼 가져 옴
+                    {
+                        _LL_items.Last.Value.anchoredPosition = new Vector2(_list_anchorX[i], _startAnchorY);
+
+                        _LL_items.AddFirst(_LL_items.Last.Value);
+                        _LL_items.RemoveLast();
+                    }
+                }
+
+                _endAnchorY = _LL_items.Last.Value.anchoredPosition.y;
+            }
+        }
     }
     #endregion
 
