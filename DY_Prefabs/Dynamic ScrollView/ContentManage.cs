@@ -213,10 +213,12 @@ public class ContentManage : MonoBehaviour
 
     void ContentManageDownLine()
     {
+        // 가장 최상단 일 경우 + Content의 윗 부분에 item이 있을 경우 == return
         if (_LL_items.First.Value.anchoredPosition.y == _org_startAnchorY
             || _LL_items.First.Value.anchoredPosition.y >= -_RTR_content.anchoredPosition.y)
             return;
 
+        // _LL_enabledItems.Count를 _GLG_content.constraintCount와 맞춰주고
         while (true)
         {
             if (_LL_enabledItems != null && _LL_enabledItems.Count >= _GLG_content.constraintCount)
@@ -228,6 +230,7 @@ public class ContentManage : MonoBehaviour
             --_endIndex;
         }
 
+        // 윗 라인을 채움
         if (_LL_enabledItems != null && _LL_enabledItems.Count >= _GLG_content.constraintCount)
         {
             _startAnchorY += _intervalHeight;
