@@ -50,11 +50,6 @@ public class ContentManage : MonoBehaviour
     [SerializeField, Tooltip("마지막 item index")]
     int _endIndex = 0;
 
-    private void Start()
-    {
-        Init();
-    }
-
     public void Init()
     {
         SetContentHeight();
@@ -148,15 +143,11 @@ public class ContentManage : MonoBehaviour
 
         if (_RTR_content.anchoredPosition.y > _curPosY)
         {
-            Debug.Log("스크롤 내리는 중");
-
             _curPosY = _RTR_content.anchoredPosition.y;
             ContentManageUpLine();
         }
         else
         {
-            Debug.Log("스크롤 올리는 중");
-
             _curPosY = _RTR_content.anchoredPosition.y;
             ContentManageDownLine();
         }
@@ -170,7 +161,6 @@ public class ContentManage : MonoBehaviour
         // 현재 라인이 item의 머리 끝에 닿았을 때 그 위에 아이템이 존재할 경우 비활성화 하기 위함
         // => 머리 끝 부분의 PosY 구하기 위함
         double index_up = (_RTR_content.anchoredPosition.y - _GLG_content.padding.top) / _intervalHeight;
-        Debug.Log(Math.Truncate(index_up));
 
         if (index_up > 1)
         {
@@ -223,46 +213,44 @@ public class ContentManage : MonoBehaviour
 
     void ContentManageDownLine()
     {
-        if (_LL_items.First.Value.anchoredPosition.y == _org_startAnchorY)
+        if (_LL_items.First.Value.anchoredPosition.y == _org_startAnchorY
+            || _LL_items.First.Value.anchoredPosition.y >= -_RTR_content.anchoredPosition.y)
             return;
 
-        // 현재 라인이 item의 머리 끝에 닿았을 때 그 위에 아이템이 존재하지 않을 경우 활성화 하기 위함
-        // => 머리 끝 부분의 PosY 구하기 위함
-        double index_up = (_RTR_content.anchoredPosition.y - _GLG_content.padding.top) / _intervalHeight;
-        Debug.Log(Math.Truncate(index_up));
-
-        if (index_up > 1)
+        while (true)
         {
-            // 윗 라인이 존재하지 않을 경우
-            if (_LL_items.First.Value.anchoredPosition.y <= _startAnchorY + _intervalHeight)
+            if (_LL_enabledItems != null && _LL_enabledItems.Count >= _GLG_content.constraintCount)
+                break;
+
+            _LL_items.Last.Value.gameObject.SetActive(false);
+            _LL_enabledItems.AddLast(_LL_items.Last.Value);
+            _LL_items.RemoveLast();
+            --_endIndex;
+        }
+
+        if (_LL_enabledItems != null && _LL_enabledItems.Count >= _GLG_content.constraintCount)
+        {
+            _startAnchorY += _intervalHeight;
+            _endAnchorY = _LL_items.Last.Value.anchoredPosition.y;
+
+            for (int i = -1; ++i < _list_anchorX.Count;)
+                if (_list_anchorX[i] == _LL_items.Last.Value.anchoredPosition.x)
+                    _endAnchorX_index = i;
+
+            int x = _GLG_content.constraintCount;
+            foreach (RectTransform item in _LL_enabledItems)
             {
-                _startAnchorY += _intervalHeight;
-
-                // column count 만큼 위로 활성화 해주면 됨
-                for (int i = _GLG_content.constraintCount; --i > -1;)
+                if (--x >= 0)
                 {
-                    --_endIndex;
+                    _LL_items.AddFirst(item);
 
-                    // 먼저 비활성화 되어있는 item이 있나 확인
-                    if (_LL_enabledItems != null && _LL_enabledItems.Count > 0)
-                    {
-                        _LL_enabledItems.Last.Value.anchoredPosition = new Vector2(_list_anchorX[i], _startAnchorY);
-                        _LL_enabledItems.Last.Value.gameObject.SetActive(true);
-
-                        _LL_items.AddFirst(_LL_enabledItems.Last.Value);
-                        _LL_enabledItems.RemoveLast();
-                    }
-                    else // 그 뒤 _LL_items에서 남은 count만큼 가져 옴
-                    {
-                        _LL_items.Last.Value.anchoredPosition = new Vector2(_list_anchorX[i], _startAnchorY);
-
-                        _LL_items.AddFirst(_LL_items.Last.Value);
-                        _LL_items.RemoveLast();
-                    }
+                    item.anchoredPosition = new Vector2(_list_anchorX[x], _startAnchorY);
+                    item.gameObject.SetActive(true);
                 }
-
-                _endAnchorY = _LL_items.Last.Value.anchoredPosition.y;
             }
+
+            foreach (RectTransform item in _LL_items)
+                _LL_enabledItems.Remove(item);
         }
     }
     #endregion
