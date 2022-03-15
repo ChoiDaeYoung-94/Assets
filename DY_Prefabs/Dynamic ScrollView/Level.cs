@@ -13,10 +13,19 @@ namespace DY
         internal RectTransform _RTR_this = null;
         [SerializeField, Tooltip("TMP_Text - level표기 위함")]
         TMP_Text _TMP_level = null;
+        [Header("--- 참고용 ---")]
+        [SerializeField, Tooltip("현재 이 object의 level")]
+        internal int _curLevel = 0;
 
-        internal void Init(int level)
+        internal void SetLevel(int level)
         {
+            _curLevel = level;
             _TMP_level.text = level.ToString();
+        }
+
+        internal int GetLevel()
+        {
+            return _curLevel;
         }
     }
 }

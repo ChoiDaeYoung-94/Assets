@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 public class ContentManage : MonoBehaviour
 {
-    [Header("--- 세팅 ---")]
+    [Header("--- 세팅 [ Content ] ---")]
     [SerializeField, Tooltip("GO - 사용 될 content item")]
     GameObject _go_item = null;
     [SerializeField, Tooltip("필요한 item의 amount - 높이 계산에 필요")]
@@ -24,13 +24,17 @@ public class ContentManage : MonoBehaviour
     [SerializeField, Tooltip("ContentSizeFitter - 아이템 생성 후 enabled false")]
     ContentSizeFitter _CSF_content = null;
 
-    [Header("--- 참고용 ---")]
+    [Header("--- 세팅 [ Level ] ---")]
+    [SerializeField, Tooltip("진행 중인 Level")]
+    internal int _curLevel = 0;
+
+    [Header("--- 참고용 [ Content ] ---")]
     [SerializeField, Tooltip("더해줄 최소 생성 라인 수 [고정]")]
     int _minPlusLine = 3;
     [SerializeField, Tooltip("최소 생성 itemList")]
-    LinkedList<RectTransform> _LL_items = new LinkedList<RectTransform>();
+    LinkedList<DY.Level> _LL_items = new LinkedList<DY.Level>();
     [SerializeField, Tooltip("비활성 itemList")]
-    LinkedList<RectTransform> _LL_enabledItems = new LinkedList<RectTransform>();
+    LinkedList<DY.Level> _LL_enabledItems = new LinkedList<DY.Level>();
     [SerializeField, Tooltip("Content의 PosY 변화 계산 위함")]
     float _curPosY = 0;
     [SerializeField, Tooltip("계산된 View의 총 Height")]
@@ -49,6 +53,12 @@ public class ContentManage : MonoBehaviour
     int _endIndex = 0;
     [SerializeField, Tooltip("마지막 item index 참고만 하는 값")]
     float _org_endIndex = 0;
+
+    [Header("--- 참고용 [ Level ] ---")]
+    [SerializeField, Tooltip("현재 Content에 있는 Item_level의 첫 index의 level")]
+    int _startLevel = 0;
+    [SerializeField, Tooltip("현재 Content에 있는 Item_level의 마지막 index의 level")]
+    int _endLevel = 0;
 
     // ETC
     [Tooltip("스크롤 중인지 확인 -> 스크롤 끝난 뒤 체크하기 위함")]
@@ -107,17 +117,19 @@ public class ContentManage : MonoBehaviour
 
         int minLine = (int)Math.Truncate(height / (_GLG_content.cellSize.y + _GLG_content.spacing.y)) + _minPlusLine;
 
+        int settingAmount = minLine * _GLG_content.constraintCount;
         int x = -1;
-        for (int i = -1; ++i < minLine * _GLG_content.constraintCount;)
+        for (int i = -1; ++i < settingAmount;)
         {
             // 최소 생성해야하는 양에 맞춰 생성 후 list에도 보관
             GameObject item = Instantiate(_go_item, _RTR_content);
             item.SetActive(true);
 
             DY.Level level_item = item.GetComponent<DY.Level>();
-            level_item.Init(i + 1);
+            // 임시 -> 추후 _curLevel에 따라 진행 되도록
+            level_item.SetLevel(i + 1);
 
-            _LL_items.AddLast(level_item._RTR_this);
+            _LL_items.AddLast(level_item);
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(_RTR_content);
 
@@ -139,6 +151,9 @@ public class ContentManage : MonoBehaviour
                 break;
             }
         }
+        // 임시 -> 추후 _curLevel에 따라 _startLevel를 잡으면 됨
+        _startLevel = 1;
+        _endLevel = settingAmount;
 
         // 받은 마지막 anchoredPos를 이용해 마지막 x의 index 구함
         for (int i = -1; ++i < _list_anchorX.Count;)
@@ -173,8 +188,8 @@ public class ContentManage : MonoBehaviour
             ContentManageDownLine();
         }
 
-        _startAnchorY = _LL_items.First.Value.anchoredPosition.y;
-        _endAnchorY = _LL_items.Last.Value.anchoredPosition.y;
+        _startAnchorY = _LL_items.First.Value._RTR_this.anchoredPosition.y;
+        _endAnchorY = _LL_items.Last.Value._RTR_this.anchoredPosition.y;
 
         _isScroll = false;
     }
@@ -184,9 +199,9 @@ public class ContentManage : MonoBehaviour
         if (_endIndex + 1 > _amount)
             return;
 
-        foreach (RectTransform item in _LL_items)
+        foreach (DY.Level item in _LL_items)
         {
-            if (item.anchoredPosition.y - _intervalHeight >= -_RTR_content.anchoredPosition.y)
+            if (item._RTR_this.anchoredPosition.y - _intervalHeight >= -_RTR_content.anchoredPosition.y)
             {
                 _LL_enabledItems.AddLast(item);
                 item.gameObject.SetActive(false);
@@ -198,14 +213,17 @@ public class ContentManage : MonoBehaviour
         // 비활성화 한 item들을 _LL_items에서 지운 뒤 위치 조절 후 활성화
         if (_LL_enabledItems != null && _LL_enabledItems.Count > 0)
         {
-            foreach (RectTransform item in _LL_enabledItems)
+            foreach (DY.Level item in _LL_enabledItems)
                 _LL_items.Remove(item);
 
-            foreach (RectTransform item in _LL_enabledItems)
+            foreach (DY.Level item in _LL_enabledItems)
             {
                 if (_endIndex + 1 <= _amount)
                 {
                     ++_endIndex;
+                    ++_endLevel;
+
+                    item.SetLevel(_endLevel);
                     _LL_items.AddLast(item);
 
                     if (_endAnchorX_index + 1 >= _list_anchorX.Count)
@@ -216,16 +234,19 @@ public class ContentManage : MonoBehaviour
                     else
                         ++_endAnchorX_index;
 
-                    item.anchoredPosition = new Vector2(_list_anchorX[(int)_endAnchorX_index], _endAnchorY);
+                    item._RTR_this.anchoredPosition = new Vector2(_list_anchorX[(int)_endAnchorX_index], _endAnchorY);
+                    
                     item.gameObject.SetActive(true);
                 }
                 else
                     break;
             }
 
-            foreach (RectTransform item in _LL_items)
+            foreach (DY.Level item in _LL_items)
                 _LL_enabledItems.Remove(item);
         }
+
+        _startLevel = _LL_items.First.Value.GetLevel();
     }
 
     void ContentManageDownLine()
@@ -235,8 +256,8 @@ public class ContentManage : MonoBehaviour
             return;
 
         // Content의 윗 부분에 item이 있을 경우 return
-        if (_LL_items.First.Value.anchoredPosition.x == _list_anchorX[0]
-            && _LL_items.First.Value.anchoredPosition.y >= -_RTR_content.anchoredPosition.y)
+        if (_LL_items.First.Value._RTR_this.anchoredPosition.x == _list_anchorX[0]
+            && _LL_items.First.Value._RTR_this.anchoredPosition.y >= -_RTR_content.anchoredPosition.y)
             return;
 
         // _LL_enabledItems.Count를 _GLG_content.constraintCount와 맞춰주고
@@ -249,6 +270,7 @@ public class ContentManage : MonoBehaviour
             _LL_enabledItems.AddLast(_LL_items.Last.Value);
             _LL_items.RemoveLast();
             --_endIndex;
+            --_endLevel;
         }
 
         // 윗 라인을 채움
@@ -257,22 +279,25 @@ public class ContentManage : MonoBehaviour
             _startAnchorY += _intervalHeight;
 
             for (int i = -1; ++i < _list_anchorX.Count;)
-                if (_list_anchorX[i] == _LL_items.Last.Value.anchoredPosition.x)
+                if (_list_anchorX[i] == _LL_items.Last.Value._RTR_this.anchoredPosition.x)
                     _endAnchorX_index = i;
 
             int x = _GLG_content.constraintCount;
-            foreach (RectTransform item in _LL_enabledItems)
+            foreach (DY.Level item in _LL_enabledItems)
             {
                 if (--x >= 0)
                 {
                     _LL_items.AddFirst(item);
 
-                    item.anchoredPosition = new Vector2(_list_anchorX[x], _startAnchorY);
+                    --_startLevel;
+                    item.SetLevel(_startLevel);
+
+                    item._RTR_this.anchoredPosition = new Vector2(_list_anchorX[x], _startAnchorY);
                     item.gameObject.SetActive(true);
                 }
             }
 
-            foreach (RectTransform item in _LL_items)
+            foreach (DY.Level item in _LL_items)
                 _LL_enabledItems.Remove(item);
         }
     }
