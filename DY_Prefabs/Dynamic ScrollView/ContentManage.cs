@@ -7,8 +7,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class ContentManage : MonoBehaviour
+public class ContentManage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("--- 세팅 [ Content ] ---")]
     [SerializeField, Tooltip("GO - 사용 될 content item")]
@@ -60,20 +61,31 @@ public class ContentManage : MonoBehaviour
     [SerializeField, Tooltip("현재 Content에 있는 Item_level의 마지막 index의 level")]
     int _endLevel = 0;
 
+    [Header("--- 세팅 [ Scroll Effect ] ---")]
+    [SerializeField, Tooltip("GO - scroll시 활성화 -> block")]
+    GameObject _go_blockScroll = null;
+    [SerializeField, Range(0f, 1f),
+     Tooltip("co_MoveCurLevelEffect실행 시 lerp에 사용 될 값")]
+    float _lerp = 0f;
+
+    [Header("--- 참고용 [ Effect ] ---")]
+    [Tooltip("MoveCurLevelEffect()가 아직 진행중인지를 판단하기 위함")]
+    bool _isMoveCurLevelEffect = false;
+    [Tooltip("Coroutine - co_MoveCurLevelEffect")]
+    Coroutine _co_moveCurLevel = null;
+
     // ETC
     [Tooltip("스크롤 중인지 확인 -> 스크롤 끝난 뒤 체크하기 위함")]
     bool _isScroll = false;
 
-    private void Start()
-    {
-        Init();
-    }
-
+    /// <summary>
+    /// Initialize.cs 에서 호출
+    /// </summary>
     public void Init()
     {
         SetContentHeight();
-
         CreateTarget();
+        MoveCurLevel();
     }
 
     private void Update()
@@ -86,6 +98,8 @@ public class ContentManage : MonoBehaviour
     }
 
     #region Functions
+
+    #region Init
     /// <summary>
     /// Item, spacing, padding을 고려한 Content의 총 Height 계산
     /// 그외 필요한 부분 계산
@@ -126,7 +140,6 @@ public class ContentManage : MonoBehaviour
             item.SetActive(true);
 
             DY.Level level_item = item.GetComponent<DY.Level>();
-            // 임시 -> 추후 _curLevel에 따라 진행 되도록
             level_item.SetLevel(i + 1);
 
             _LL_items.AddLast(level_item);
@@ -151,7 +164,7 @@ public class ContentManage : MonoBehaviour
                 break;
             }
         }
-        // 임시 -> 추후 _curLevel에 따라 _startLevel를 잡으면 됨
+
         _startLevel = 1;
         _endLevel = settingAmount;
 
@@ -165,6 +178,17 @@ public class ContentManage : MonoBehaviour
         _CSF_content.enabled = false;
     }
 
+    // 현재 진행 중인 레벨이 존재할 경우 첫 Init시 그 레벨의 위치로 이동
+    void MoveCurLevel()
+    {
+        var curLine = Math.Ceiling((float)_curLevel / _GLG_content.constraintCount);
+
+        float curY = ((float)curLine - 1) * _intervalHeight + _GLG_content.padding.top;
+        _RTR_content.anchoredPosition = new Vector2(_RTR_content.anchoredPosition.x, curY);
+    }
+    #endregion
+
+    #region Scroll
     /// <summary>
     /// ScrollRect -> On Value Changed에서 호출
     /// * 생성된 아이템 관리
@@ -235,7 +259,7 @@ public class ContentManage : MonoBehaviour
                         ++_endAnchorX_index;
 
                     item._RTR_this.anchoredPosition = new Vector2(_list_anchorX[(int)_endAnchorX_index], _endAnchorY);
-                    
+
                     item.gameObject.SetActive(true);
                 }
                 else
@@ -301,6 +325,70 @@ public class ContentManage : MonoBehaviour
                 _LL_enabledItems.Remove(item);
         }
     }
+    #endregion
+
+    #region Scroll Effect
+    /// <summary>
+    /// ScrollView -> Viewport -> MoveCurLevelEffect 클릭 시 Event Trigger로 호출
+    /// </summary>
+    public void MoveCurLevelEffect()
+    {
+        if (!_isMoveCurLevelEffect)
+        {
+            StopMoveCurLevelCoroutine();
+
+            _co_moveCurLevel = StartCoroutine(co_MoveCurLevelEffect());
+        }
+    }
+
+    IEnumerator co_MoveCurLevelEffect()
+    {
+        _isMoveCurLevelEffect = true;
+        _go_blockScroll.SetActive(true);
+
+        var curLine = Math.Ceiling((float)_curLevel / _GLG_content.constraintCount);
+        float curY = ((float)curLine - 1) * _intervalHeight + _GLG_content.padding.top;
+        Vector2 targetPosition = new Vector2(_RTR_content.anchoredPosition.x, curY);
+
+        while (Math.Abs(curY - _RTR_content.anchoredPosition.y) >= 1f)
+        {
+            _RTR_content.anchoredPosition = Vector2.Lerp(_RTR_content.anchoredPosition, targetPosition, _lerp);
+            yield return null;
+        }
+
+        _go_blockScroll.SetActive(false);
+        _isMoveCurLevelEffect = false;
+    }
+
+    void StopMoveCurLevelCoroutine()
+    {
+        if (_co_moveCurLevel != null)
+        {
+            StopCoroutine(_co_moveCurLevel);
+
+            _go_blockScroll.SetActive(false);
+            _isMoveCurLevelEffect = false;
+
+            _co_moveCurLevel = null;
+        }
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        
+    }
+    #endregion
+
     #endregion
 
 #if UNITY_EDITOR
