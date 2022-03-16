@@ -1,0 +1,1 @@
+* res	: Android 언어별 앱 이름 대응 [ Plugins - Android 하위 존재 ]

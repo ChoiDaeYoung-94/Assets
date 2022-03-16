@@ -8,6 +8,8 @@
 
 *	ScreenSize.cs	: 타이틀 사이즈 기기대응
 
+*	ScreenSizeRatio.cs	: 타이틀 사이즈 기기대응(사이즈 딱 맞춤)
+
 *	SetFPS.cs		: 프레임 설정
 
 *	Time.cs			: 시간 관련 체크, 반환
