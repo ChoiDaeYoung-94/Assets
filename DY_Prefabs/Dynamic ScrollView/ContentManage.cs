@@ -7,10 +7,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
-public class ContentManage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class ContentManage : MonoBehaviour
 {
+    static ContentManage instance;
+    public static ContentManage Instance { get { return instance; } }
+
     [Header("--- 세팅 [ Content ] ---")]
     [SerializeField, Tooltip("GO - 사용 될 content item")]
     GameObject _go_item = null;
@@ -62,6 +64,8 @@ public class ContentManage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     int _endLevel = 0;
 
     [Header("--- 세팅 [ Scroll Effect ] ---")]
+    [SerializeField, Tooltip("GO - 현재 레벨이 있는 위치로 이동")]
+    GameObject _go_moveCurLevelEffect = null;
     [SerializeField, Tooltip("GO - scroll시 활성화 -> block")]
     GameObject _go_blockScroll = null;
     [SerializeField, Range(0f, 1f),
@@ -78,6 +82,20 @@ public class ContentManage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [Tooltip("스크롤 중인지 확인 -> 스크롤 끝난 뒤 체크하기 위함")]
     bool _isScroll = false;
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            GameObject go = gameObject;
+            instance = go.GetComponent<ContentManage>();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        instance = null;
+    }
+
     /// <summary>
     /// Initialize.cs 에서 호출
     /// </summary>
@@ -90,6 +108,11 @@ public class ContentManage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private void Update()
     {
+        if (CheckCurLevelInContent())
+            _go_moveCurLevelEffect.SetActive(false);
+        else
+            _go_moveCurLevelEffect.SetActive(true);
+
         if (!_isScroll)
         {
             ContentManageUpLine();
@@ -329,6 +352,23 @@ public class ContentManage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     #region Scroll Effect
     /// <summary>
+    /// 현재 레벨의 object가 Viewport상에 존재하는지 확인
+    /// </summary>
+    /// <returns></returns>
+    bool CheckCurLevelInContent()
+    {
+        var curLine = Math.Ceiling((float)_curLevel / _GLG_content.constraintCount);
+
+        float curY = (float)curLine * _intervalHeight + _GLG_content.padding.top;
+
+        if (_RTR_content.anchoredPosition.y >= curY
+            || _RTR_content.anchoredPosition.y <= curY - _RTR_parentView.sizeDelta.y - _intervalHeight)
+            return false;
+        else
+            return true;
+    }
+
+    /// <summary>
     /// ScrollView -> Viewport -> MoveCurLevelEffect 클릭 시 Event Trigger로 호출
     /// </summary>
     public void MoveCurLevelEffect()
@@ -339,6 +379,14 @@ public class ContentManage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
             _co_moveCurLevel = StartCoroutine(co_MoveCurLevelEffect());
         }
+    }
+
+    /// <summary>
+    /// ScrollView -> BlockScroll 클릭 시 Event Trigger로 호출
+    /// </summary>
+    public void BlockScroll()
+    {
+        StopMoveCurLevelCoroutine();
     }
 
     IEnumerator co_MoveCurLevelEffect()
@@ -371,21 +419,6 @@ public class ContentManage : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
             _co_moveCurLevel = null;
         }
-    }
-
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        
     }
     #endregion
 
