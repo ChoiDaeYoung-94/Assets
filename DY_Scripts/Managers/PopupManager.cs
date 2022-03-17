@@ -125,7 +125,12 @@ public class PopupManager
 
         Debug.Log(_popupStack.Count + " - _popupStack.Count Disable 후");
     }
+    #endregion
 
+    #region Functions
+    /// <summary>
+    /// 모든 팝업 닫기
+    /// </summary>
     public void DisableAllPop()
     {
         for (int i = -1; ++i < _popupStack.Count;)
@@ -135,9 +140,10 @@ public class PopupManager
             temp.SetActive(false);
         }
     }
-    #endregion
 
-    #region Functions
+    /// <summary>
+    /// 로비 씬 진입 시 초기화
+    /// </summary>
     public void InitLobby()
     {
         _popupStack.Clear();
@@ -145,6 +151,9 @@ public class PopupManager
         isException = true;
     }
 
+    /// <summary>
+    /// 게임 씬 진입 시 초기화
+    /// </summary>
     public void InitGame()
     {
         _popupStack.Clear();
