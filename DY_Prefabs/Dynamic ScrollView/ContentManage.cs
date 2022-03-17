@@ -26,18 +26,19 @@ public class ContentManage : MonoBehaviour
     GridLayoutGroup _GLG_content = null;
     [SerializeField, Tooltip("ContentSizeFitter - 아이템 생성 후 enabled false")]
     ContentSizeFitter _CSF_content = null;
+    [SerializeField, Tooltip("더해줄 최소 생성 라인 수 [고정]")]
+    int _minPlusLine = 3;
 
     [Header("--- 세팅 [ Level ] ---")]
     [SerializeField, Tooltip("진행 중인 Level")]
     internal int _curLevel = 0;
 
     [Header("--- 참고용 [ Content ] ---")]
-    [SerializeField, Tooltip("더해줄 최소 생성 라인 수 [고정]")]
-    int _minPlusLine = 3;
     [SerializeField, Tooltip("최소 생성 itemList")]
     LinkedList<DY.Level> _LL_items = new LinkedList<DY.Level>();
     [SerializeField, Tooltip("비활성 itemList")]
     LinkedList<DY.Level> _LL_enabledItems = new LinkedList<DY.Level>();
+    [Header("--- 참고용 [ Content ] ---")]
     [SerializeField, Tooltip("Content의 PosY 변화 계산 위함")]
     float _curPosY = 0;
     [SerializeField, Tooltip("계산된 View의 총 Height")]
@@ -99,7 +100,7 @@ public class ContentManage : MonoBehaviour
     /// <summary>
     /// Initialize.cs 에서 호출
     /// </summary>
-    public void Init()
+    internal void Init()
     {
         SetContentHeight();
         CreateTarget();
@@ -206,7 +207,10 @@ public class ContentManage : MonoBehaviour
     {
         var curLine = Math.Ceiling((float)_curLevel / _GLG_content.constraintCount);
 
-        float curY = ((float)curLine - 1) * _intervalHeight + _GLG_content.padding.top;
+        float curY = ((float)curLine - 2) * _intervalHeight + _GLG_content.padding.top;
+        if (curY < 0)
+            curY = 0;
+
         _RTR_content.anchoredPosition = new Vector2(_RTR_content.anchoredPosition.x, curY);
     }
     #endregion
@@ -395,7 +399,10 @@ public class ContentManage : MonoBehaviour
         _go_blockScroll.SetActive(true);
 
         var curLine = Math.Ceiling((float)_curLevel / _GLG_content.constraintCount);
-        float curY = ((float)curLine - 1) * _intervalHeight + _GLG_content.padding.top;
+        float curY = ((float)curLine - 2) * _intervalHeight + _GLG_content.padding.top;
+        if (curY < 0)
+            curY = _GLG_content.padding.top / 2;
+
         Vector2 targetPosition = new Vector2(_RTR_content.anchoredPosition.x, curY);
 
         while (Math.Abs(curY - _RTR_content.anchoredPosition.y) >= 1f)
