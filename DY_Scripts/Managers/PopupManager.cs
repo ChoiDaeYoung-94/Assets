@@ -136,7 +136,7 @@ public class PopupManager
         for (int i = -1; ++i < _popupStack.Count;)
         {
             GameObject temp = null;
-            temp = _popupStack.Pop();
+            temp = _popupStack.Peek();
             temp.SetActive(false);
         }
     }
