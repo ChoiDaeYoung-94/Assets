@@ -125,10 +125,10 @@ namespace DY
             if (colon)
             {
                 if (hour.Length != 0) temp.Append(hour + ":");
-                if (minute.Length != 0) temp.Append(minute + ":");
+                if (minute.Length != 0) temp.Append(minute);
 
                 if (plusSecond || (hour.Length == 0 && minute.Length == 0))
-                    temp.Append(second);
+                    temp.Append(":" + second);
             }
             else
             {
